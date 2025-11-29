@@ -10,3 +10,4 @@
 </div>
 
 <div class="mt-6 h-96 bg-[#141414] border border-gray-800 rounded-xl shadow"></div>
+
