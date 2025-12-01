@@ -1,108 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>WDN Dashboard</title>
+<?php
+session_start();
 
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+// If not logged in, redirect to login
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
 
-    <!-- Tailwind Config -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        darkbg: "#0f0f0f",
-                        card: "#141414",
-                    }
-                }
-            }
-        }
-    </script>
+$user = $_SESSION["user"];
+$role = $user["role"];   // "admin" or "staff"
+?>
+<style>
+/* Sidebar Container */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(135deg, #0e1e2f, #1d3557);
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(0);
+    transition: transform .3s ease;
+    padding: 20px;
+}
 
-    <!-- Google Font: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+.sidebar.hidden {
+    transform: translateX(-260px);
+}
 
-    <style>
-        /* custom animations */
-        .slide-in {
-            animation: slideIn 0.35s ease-out;
-        }
-        @keyframes slideIn {
-            from { transform: translateX(-20px); opacity: 0; }
-            to   { transform: translateX(0); opacity: 1; }
-        }
+/* Toggle Button */
+.toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 270px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #1d3557;
+    transition: left .3s ease;
+}
 
-        .fade-in {
-            animation: fadeIn 0.4s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
-        }
-    </style>
-</head>
+.sidebar.hidden ~ .toggle-btn {
+    left: 20px;
+}
 
-<body class="bg-darkbg text-gray-200 font-sans">
+/* Links */
+.sidebar a {
+    display: block;
+    margin: 12px 0;
+    text-decoration: none;
+    color: #f1faee;
+    font-size: 17px;
+    padding: 8px 0;
+}
 
-    <!-- MOBILE TOP NAV -->
-    <div class="md:hidden bg-card border-b border-gray-800 p-4 flex justify-between items-center sticky top-0 z-50">
-        <h1 class="text-lg font-semibold">WDN System</h1>
-        <button id="mobileMenuBtn" class="text-gray-300 hover:text-white">
-            ☰
-        </button>
+.sidebar a:hover {
+    color: #a8dadc;
+}
+
+/* User Info */
+.profile-box {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.profile-box h3 {
+    margin: 0;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 25px;
+    transition: margin-left .3s ease;
+}
+
+.sidebar.hidden ~ .main-content {
+    margin-left: 20px;
+}
+</style>
+
+<div class="sidebar" id="sidebar">
+    <div class="profile-box">
+        <h3><?= htmlspecialchars($user["username"]) ?></h3>
+        <small><?= strtoupper($role) ?></small>
     </div>
 
-    <div class="flex h-screen">
+    <!-- Navigation -->
+    <a href="home.php">🏠 Home</a>
+    <a href="main.php">🗺️ Water Network</a>
+    <a href="about.php">👥 About Authors</a>
 
-        <!-- SIDEBAR -->
-        <aside id="sidebar"
-               class="w-64 bg-card border-r border-gray-800 p-4 flex flex-col slide-in
-                      fixed md:static inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50">
+    <?php if ($role === "admin"): ?>
+        <a href="admin_users.php">🔐 Manage Users</a>
+        <a href="admin_projects.php">📁 Project Database</a>
+    <?php endif; ?>
 
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 bg-purple-600 rounded-lg shadow"></div>
-                <h1 class="text-lg font-semibold">WDN System</h1>
-            </div>
+    <a href="logout.php" style="color:#ef5350">🚪 Logout</a>
+</div>
 
-            <nav class="flex-1 space-y-2 text-sm fade-in">
-                <a href="home.php" class="block px-3 py-2 rounded-lg hover:bg-gray-800">Home</a>
-                <a href="main.php" class="block px-3 py-2 rounded-lg hover:bg-gray-800">Mapping</a>
-                <a href="authors.php" class="block px-3 py-2 rounded-lg hover:bg-gray-800">About Authors</a>
-                <a href="settings.php" class="block px-3 py-2 rounded-lg hover:bg-gray-800">Settings</a>
-            </nav>
-
-            <div class="mt-auto">
-                <a href="logout.php"
-                   class="block px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-center transition">
-                    Logout
-                </a>
-            </div>
-        </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="flex-1 p-6 overflow-y-auto fade-in md:ml-0 ml-0">
-
-                </main>
-    </div>
+<div class="toggle-btn" onclick="toggleSidebar()">☰</div>
 
 <script>
-    // Mobile toggle
-    const sidebar = document.getElementById("sidebar");
-    const mobileBtn = document.getElementById("mobileMenuBtn");
-
-    mobileBtn?.addEventListener("click", () => {
-        if (sidebar.classList.contains("-translate-x-full")) {
-            sidebar.classList.remove("-translate-x-full");
-        } else {
-            sidebar.classList.add("-translate-x-full");
-        }
-    });
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("hidden");
+}
 </script>
-
-</body>
-</html>

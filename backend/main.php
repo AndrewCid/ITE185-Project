@@ -1,7 +1,12 @@
+<!-- Authentication -->
 <?php
-// (Optional) include layout / header files
-// include 'includes/header.php';
+session_start();
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
