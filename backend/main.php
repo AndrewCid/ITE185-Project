@@ -112,6 +112,17 @@ if (!isset($_SESSION["user"])) {
 </script>
 
 </body>
+
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById("sidebar");
+    const content = document.getElementById("content");
+
+    sidebar.classList.toggle("closed");
+    content.classList.toggle("expanded");
+}
+</script>
+
 </html>
 
 <?php

@@ -1,15 +1,19 @@
 <?php
-session_start();
+// Start session only if not active
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// If not logged in, redirect to login
+// Ensure user is logged in (safety check)
 if (!isset($_SESSION["user"])) {
     header("Location: login.php");
     exit;
 }
 
 $user = $_SESSION["user"];
-$role = $user["role"];   // "admin" or "staff"
+$role = strtolower($user["role"]); // Normalize
 ?>
+
 <style>
 /* Sidebar Container */
 .sidebar {
@@ -81,19 +85,26 @@ $role = $user["role"];   // "admin" or "staff"
 </style>
 
 <div class="sidebar" id="sidebar">
+
     <div class="profile-box">
         <h3><?= htmlspecialchars($user["username"]) ?></h3>
         <small><?= strtoupper($role) ?></small>
     </div>
 
-    <!-- Navigation -->
+    <!-- BASIC NAVIGATION (Visible to ALL ROLES) -->
     <a href="home.php">🏠 Home</a>
     <a href="main.php">🗺️ Water Network</a>
     <a href="about.php">👥 About Authors</a>
 
-    <?php if ($role === "admin"): ?>
-        <a href="admin_users.php">🔐 Manage Users</a>
+    <!-- ADMIN + SUPERADMIN -->
+    <?php if ($role === "admin" || $role === "superadmin"): ?>
+        <a href="admin_users.php">👥 User Database</a>
         <a href="admin_projects.php">📁 Project Database</a>
+    <?php endif; ?>
+
+    <!-- SUPERADMIN ONLY -->
+    <?php if ($role === "superadmin"): ?>
+        <a href="role_manager.php">👑 Role Manager</a>
     <?php endif; ?>
 
     <a href="logout.php" style="color:#ef5350">🚪 Logout</a>
