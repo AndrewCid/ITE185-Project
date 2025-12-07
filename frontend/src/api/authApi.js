@@ -20,3 +20,12 @@ export async function getCurrentUser() {
   );
   return res.json();
 }
+
+export async function logoutUser() {
+  const res = await fetch("http://localhost/wdn-app/backend/auth/logout.php", {
+    method: "POST",
+    credentials: "include"
+  });
+
+  return res.json();
+}

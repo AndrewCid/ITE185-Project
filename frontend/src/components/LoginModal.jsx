@@ -1,4 +1,3 @@
-// src/components/LoginModal.jsx
 import React, { useState } from "react";
 import { loginUser } from "../api/authApi";
 
@@ -9,46 +8,89 @@ export default function LoginModal({ onLoginSuccess }) {
 
   async function handleLogin(e) {
     e.preventDefault();
+    setError("");
 
-    const result = await loginUser(username, password);
+    const res = await loginUser(username, password);
 
-    if (result.status === "success") {
-      onLoginSuccess(result.user);
+    if (res.success) {
+      onLoginSuccess(res.user || true);
     } else {
-      setError("Invalid username or password.");
+      setError(res.message || "Login failed");
     }
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md bg-black/40 z-50">
-      <div className="bg-[#181818] p-8 rounded-xl shadow-xl w-80 text-white animate-fadeIn">
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+    <div
+      className="
+        fixed inset-0 
+        bg-black/60 backdrop-blur-md 
+        flex items-center justify-center
+        z-50
+        animate-fadeIn
+      "
+    >
+      {/* Modal container */}
+      <div
+        className="
+          bg-neutral-900 border border-neutral-700 
+          shadow-2xl rounded-2xl 
+          w-full max-w-md p-8 
+          animate-scaleIn
+        "
+      >
+        <h2 className="text-2xl font-semibold text-white mb-6 text-center">
+          Welcome Back
+        </h2>
 
-        <form onSubmit={handleLogin}>
-          <input
-            type="text"
-            placeholder="Username"
-            className="w-full p-2 mb-3 rounded bg-[#222] border border-gray-700"
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        <form onSubmit={handleLogin} className="space-y-4">
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-2 mb-3 rounded bg-[#222] border border-gray-700"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div>
+            <label className="text-gray-300 text-sm">Username</label>
+            <input
+              type="text"
+              className="
+                w-full mt-1 px-3 py-2 
+                bg-neutral-800 text-white 
+                rounded-lg border border-neutral-700 
+                focus:outline-none focus:ring-2 focus:ring-blue-500
+              "
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="text-gray-300 text-sm">Password</label>
+            <input
+              type="password"
+              className="
+                w-full mt-1 px-3 py-2 
+                bg-neutral-800 text-white 
+                rounded-lg border border-neutral-700 
+                focus:outline-none focus:ring-2 focus:ring-blue-500
+              "
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && (
+            <div className="text-red-400 text-sm mt-2 text-center">{error}</div>
+          )}
 
           <button
-            className="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded mt-2 font-semibold"
             type="submit"
+            className="
+              w-full py-2 mt-4 
+              bg-blue-600 hover:bg-blue-700 
+              text-white font-medium 
+              rounded-lg transition
+            "
           >
             Login
           </button>
-
-          {error && (
-            <p className="text-red-400 text-sm text-center mt-3">{error}</p>
-          )}
         </form>
       </div>
     </div>

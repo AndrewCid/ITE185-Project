@@ -1,7 +1,14 @@
 // src/components/Sidebar.jsx
 import React from "react";
+import { logoutUser } from "../api/authApi";
 
-export default function Sidebar({ user, isOpen }) {
+export default function Sidebar({ user, isOpen, onLogout }) {
+
+  async function handleLogout() {
+    await logoutUser();  // destroy PHP session
+    onLogout();          // tell App to hide home + show login modal
+  }
+
   const role = user?.role || "guest";
 
   return (
@@ -26,9 +33,12 @@ export default function Sidebar({ user, isOpen }) {
           </>
         )}
 
-        <a className="block text-red-400 hover:text-red-300 transition mt-6" href="/logout">
+        <button
+          onClick={handleLogout}
+          className="block text-red-400 hover:text-red-300 mt-6"
+        >
           🚪 Logout
-        </a>
+        </button>
       </nav>
     </aside>
   );

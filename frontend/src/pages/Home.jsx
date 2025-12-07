@@ -1,31 +1,26 @@
 // src/pages/Home.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import DashboardCard from "../components/DashboardCard";
-import { getCurrentUser } from "../api/authApi";
 
-export default function Home({ user: initialUser }) {
+export default function Home({ user, setUser }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [user, setUser] = useState(initialUser);
-
-  useEffect(() => {
-    if (!initialUser) {
-      getCurrentUser().then((u) => setUser(u));
-    }
-  }, []);
 
   return (
     <div className="flex min-h-screen bg-[#0d0d0d] text-white">
       {/* SIDEBAR */}
-      <Sidebar user={user} isOpen={sidebarOpen} />
+      <Sidebar
+        user={user}
+        isOpen={sidebarOpen}
+        onLogout={() => setUser(null)}  // <- fixes logout
+      />
 
       {/* MAIN CONTENT */}
       <div className={`flex-1 transition-all duration-300 ${sidebarOpen ? "ml-64" : "ml-0"}`}>
         <Topbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
         <div className="p-8 space-y-8">
-          
           {/* TOP CARDS */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <DashboardCard title="Most Recent Project">
@@ -52,7 +47,7 @@ export default function Home({ user: initialUser }) {
           <DashboardCard title="Recent Notifications">
             <ul className="space-y-2 text-gray-300">
               <li>📧 System initialized successfully.</li>
-              <li>🔥 New update available soon.</li>
+              <li>🔥 New update coming soon.</li>
             </ul>
           </DashboardCard>
         </div>

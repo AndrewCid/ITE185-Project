@@ -5,5 +5,6 @@ session_start();
 session_unset();
 session_destroy();
 
-header("Location: /../backend/pages/home.php");
+header("Content-Type: application/json");
+echo json_encode(["success" => true]);
 exit;
