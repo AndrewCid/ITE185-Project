@@ -13,7 +13,7 @@ export default function LoginModal({ onLoginSuccess }) {
     const res = await loginUser(username, password);
 
     if (res.success) {
-      onLoginSuccess(res.user || true);
+      onLoginSuccess(res.user); // always pass actual user
     } else {
       setError(res.message || "Login failed");
     }

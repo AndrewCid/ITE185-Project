@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "~leaflet/dist/leaflet.css";
+
+/* Map / UI z-index fixes */
+.leaflet-container {
+  z-index: 1 !important; /* map beneath UI */
+}
+
+/* general UI layer wrapper for toolbar, sidebar, menus */
+.ui-layer {
+  position: relative;
+  z-index: 1000 !important;
+}
+
+/* toolbar position tweaks */
+.graph-toolbar {
+  z-index: 1100;
+}
+
+/* context menu */
+.graph-context-menu {
+  z-index: 1200;
+  position: fixed;
+}
+
+/* sidebar (if using existing Sidebar, just ensure it's above map) */
+.sidebar {
+  z-index: 1150;
+}
+
+/* small nicety: ensure map occupies full height */
+html, body, #root {
+  height: 100%;
+}
+
+
 
 body {
   margin: 0;
@@ -40,6 +75,15 @@ code {
 
 .animate-scaleIn {
   animation: scaleIn 0.25s ease-out;
+}
+
+
+
+/* keep your theme */
+body {
+  background-color: #0d0d0d;
+  color: white;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
 

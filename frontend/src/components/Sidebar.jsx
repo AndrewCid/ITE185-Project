@@ -1,6 +1,7 @@
 // src/components/Sidebar.jsx
 import React from "react";
 import { logoutUser } from "../api/authApi";
+import { Link } from "react-router-dom";
 
 export default function Sidebar({ user, isOpen, onLogout }) {
 
@@ -28,7 +29,10 @@ export default function Sidebar({ user, isOpen, onLogout }) {
 
         {(role === "admin" || role === "superadmin") && (
           <>
-            <a className="block hover:text-white transition" href="/users">👤 Users</a>
+            <Link to="/users" className="block hover:text-white transition">
+            👤 Users
+            </Link>
+
             <a className="block hover:text-white transition" href="/projects">📁 Projects</a>
           </>
         )}
